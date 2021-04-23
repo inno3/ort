@@ -84,6 +84,19 @@ fun File.mapper() = FileFormat.forFile(this).mapper
 inline fun <reified T : Any> File.readValue(): T = mapper().readValue(this)
 
 /**
+ * Use the Jackson mapper returned from [File.mapper] to read an object of type [T] from this file, or return the
+ * [default] value if the file has no content.
+ */
+inline fun <reified T : Any> File.readValueOrDefault(default: T): T =
+    runCatching { readValue<T>() }.getOrDefault(default)
+
+/**
+ * Use the Jackson mapper returned from [File.mapper] to read an object of type [T] from this file, or return null if
+ * the file has no content.
+ */
+inline fun <reified T : Any> File.readValueOrNull(): T? = runCatching { readValue<T>() }.getOrNull()
+
+/**
  * Use the Jackson mapper returned from [File.mapper] to write an object of type [T] to this file. [prettyPrint]
  * indicates whether to use pretty printing or not. The function also ensures that the parent directory exists.
  */
